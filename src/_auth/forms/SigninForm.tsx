@@ -1,9 +1,10 @@
+import { Button } from '@/components/ui/button'
 import React from 'react'
 
 const SigninForm = () => {
   return (
     <div>
-      Signin Form
+      <Button>Click me</Button>
     </div>
   )
 }
