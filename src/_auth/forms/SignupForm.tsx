@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -15,8 +14,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { signUpValidation } from "@/lib/validation";
 import Loader from "@/components/shared/Loader";
+import { createUserAccount } from "@/lib/appwrite/api";
+import { useToast } from "@/hooks/use-toast";
 
 const SignupForm = () => {
+  const { toast } = useToast();
   const isLoading = false;
 
   // 1. Define your form.
@@ -33,8 +35,14 @@ const SignupForm = () => {
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof signUpValidation>) {
     // Create a user
-    const newUser = await createUserAccount(values)
-    console.log(values);
+    const newUser = await createUserAccount(values);
+
+    if (!newUser) {
+      return toast({ title: "Sign-up failed, please try again." })
+    }
+
+    // const session = await signInAccount()
+
   }
 
   return (
@@ -129,16 +137,26 @@ const SignupForm = () => {
             )}
           />
           <Button type="submit" className="shad-button_primary">
-            {isLoading? (
+            {isLoading ? (
               <div className="flex-center gap-2">
                 <Loader /> Loading...
               </div>
-            ): "Sign Up"}
+            ) : (
+              "Sign Up"
+            )}
           </Button>
         </form>
 
-        <p className="text-small-regular text-light-2 text-center mt-2"> Already have an account? <Link to="/sign-in" className="text-secondary-500 hover:text-primary-500 text-small-semibold ml-1">Log in</Link></p>
-
+        <p className="text-small-regular text-light-2 text-center mt-2">
+          {" "}
+          Already have an account?{" "}
+          <Link
+            to="/sign-in"
+            className="text-secondary-500 hover:text-primary-500 text-small-semibold ml-1"
+          >
+            Log in
+          </Link>
+        </p>
       </div>
     </Form>
   );
